@@ -4,7 +4,7 @@ This is an open-source, AI-native website and content system. If someone opens t
 
 ## First Time Setup
 
-If you just cloned this repo, follow these steps in order. You need both this repo (Frontend) and the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) repo.
+If you just cloned this repo, follow these steps in order. You need both this repo (Frontend) and the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo.
 
 ### Recommended Setup Flow
 
@@ -30,7 +30,7 @@ Before anything else, check if the user has Node.js installed by running `node -
 1. In your Supabase dashboard, go to **SQL Editor**
 2. Run each migration file from `supabase/migrations/` in order (001 through 011)
 3. Then run the Backend migration from the Backend Starter repo:
-   - `digital-home-backend-starter/supabase/migrations/001_backend_core.sql`
+   - `digital-home-backend/supabase/migrations/001_backend_core.sql`
 4. The shared database is now ready for both repos:
    - public read access is limited to published content and active offers
    - admin and agent operations happen through protected API routes
@@ -155,7 +155,7 @@ Then do the following automatically:
 4. **Verify** — ask the user to visit their Cloudflare Worker URL and confirm the site loads.
 
 ### Step 10: Set Up the Backend
-Clone and set up the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
+Clone and set up the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
 
 ### Step 11: Set Up Autonomous Publishing (GitHub Actions)
 The repo includes two GitHub Actions workflows in `.github/workflows/`:
@@ -201,7 +201,7 @@ Join the [BraveBrand community on Skool](https://www.skool.com/bravebrand/about)
 ## Project Overview
 This is a Next.js 15 website starter deployed on Cloudflare Workers with Supabase as the data layer. The site is designed to speak to three audiences simultaneously: human visitors (personalized UX), AI agents (REST API), and search engines/LLMs (structured data + llms.txt).
 
-**This is the Frontend** — the client-facing public website. Behind it sits the **Digital Home Backend Starter** (separate repo), which is the backend operating system — content pipeline, lead management, email sequences, analytics, and agent oversight. Both share the same Supabase database.
+**This is the Frontend** — the client-facing public website. Behind it sits the **Digital Home Backend** (separate repo), which is the backend operating system — content pipeline, lead management, email sequences, analytics, and agent oversight. Both share the same Supabase database.
 
 ## Tech Stack
 - **Framework:** Next.js 15 (App Router, TypeScript, RSC by default)
@@ -213,7 +213,7 @@ This is a Next.js 15 website starter deployed on Cloudflare Workers with Supabas
 
 ## Project Structure
 ```
-/digital-home-frontend-starter/
+/digital-home-frontend/
   CLAUDE.md              <- You are here
   /content-corpus-examples  <- Template brand files (copy to content-corpus/)
   /supabase/migrations      <- Database schema (run in order)

@@ -1,8 +1,8 @@
-# Digital Home Frontend Starter
+# Digital Home Frontend
 
 An open-source, agent-native website starter kit built for digital sovereignty. Fully owned infrastructure, no platform lock-in.
 
-This is the **Frontend starter** — a website starter with the full architecture already built. It handles SEO, AI traffic detection, personalization, email, analytics, and a blog powered by AI-generated content. Behind it sits the [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) — the operating system that manages content, leads, email, analytics, and AI agents. Both share the same Supabase database.
+This is the **Frontend starter** — a website starter with the full architecture already built. It handles SEO, AI traffic detection, personalization, email, analytics, and a blog powered by AI-generated content. Behind it sits the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) — the operating system that manages content, leads, email, analytics, and AI agents. Both share the same Supabase database.
 
 ```
 ┌─────────────────────────┐     ┌─────────────────────────┐
@@ -56,15 +56,15 @@ Using a separate chat for each repo helps Claude stay in the correct project con
 
 1. **Clone both starters**
    ```bash
-   git clone https://github.com/lukesbrave/digital-home-frontend-starter.git
-   git clone https://github.com/lukesbrave/digital-home-backend-starter.git
+   git clone https://github.com/lukesbrave/digital-home-frontend.git
+   git clone https://github.com/lukesbrave/digital-home-backend.git
    ```
 
-2. **Set up Supabase** — create one project at [supabase.com](https://supabase.com), run the Frontend migrations in `digital-home-frontend-starter/supabase/migrations/` (`001` through `011`), then run the Backend migration in `digital-home-backend-starter/supabase/migrations/001_backend_core.sql`
+2. **Set up Supabase** — create one project at [supabase.com](https://supabase.com), run the Frontend migrations in `digital-home-frontend/supabase/migrations/` (`001` through `011`), then run the Backend migration in `digital-home-backend/supabase/migrations/001_backend_core.sql`
 
 3. **Set up the Frontend environment**
    ```bash
-   cd digital-home-frontend-starter
+   cd digital-home-frontend
    cp .env.local.example .env.local
    npm install
    ```
@@ -105,7 +105,7 @@ The part the code can't fully give you is the **brand intelligence** that makes 
 
 ## Related
 
-- [Digital Home Backend Starter](https://github.com/lukesbrave/digital-home-backend-starter) — the operating system behind the storefront
+- [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) — the operating system behind the storefront
 - [CLAUDE.md](./CLAUDE.md) — full technical documentation
 
 ## License
