@@ -1,8 +1,3 @@
-import Link from 'next/link';
-
-const COMMUNITY_URL = 'https://www.skool.com/bravebrand/about';
-const PROMPT_BUILDER_URL = 'https://prompt-builder-pink.vercel.app';
-
 export default function HomePage() {
   return (
     <main className="min-h-screen px-6 pt-32 pb-20 flex flex-col justify-center">
@@ -60,57 +55,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-12">
-          <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-white/40 mb-6">
-            Your next steps
-          </p>
-
-          <div className="grid gap-6 sm:grid-cols-3">
-            <div>
-              <h3 className="text-white font-medium text-lg mb-2">1. Set up your content corpus</h3>
-              <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                Copy the examples into <code className="text-white/60 text-xs bg-white/[0.06] px-1.5 py-0.5 rounded">content-corpus/</code> and
-                fill them with your voice, positioning, and proof.
-              </p>
-              <a
-                href={COMMUNITY_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-white/60 hover:text-white transition-colors"
-              >
-                Get guidance in the community &rarr;
-              </a>
-            </div>
-
-            <div>
-              <h3 className="text-white font-medium text-lg mb-2">2. Design your pages</h3>
-              <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                Use the Prompt Builder to generate a design direction, then apply it with Claude Code.
-              </p>
-              <a
-                href={PROMPT_BUILDER_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-white/60 hover:text-white transition-colors"
-              >
-                Open Prompt Builder &rarr;
-              </a>
-            </div>
-
-            <div>
-              <h3 className="text-white font-medium text-lg mb-2">3. Deploy to Cloudflare</h3>
-              <p className="text-sm text-neutral-400 leading-relaxed mb-3">
-                Build and deploy to your own infrastructure. See CLAUDE.md for the full walkthrough.
-              </p>
-              <Link
-                href="/blog"
-                className="text-sm text-white/60 hover:text-white transition-colors"
-              >
-                Check the blog is connected &rarr;
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );
