@@ -121,23 +121,12 @@ export default async function ArticlePage({
               />
             </div>
           ) : (
-            <div className="grid gap-px rounded-[2rem] border border-white/10 bg-white/10 p-px md:grid-cols-[1.15fr_0.85fr]">
-              <div className="min-h-[260px] rounded-[1.85rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] px-8 py-8 flex flex-col justify-between">
-                <span className="inline-flex w-fit rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[0.68rem] font-medium text-white/45">
-                  Editorial visual
-                </span>
-                <p className="max-w-[18ch] text-base leading-relaxed text-neutral-300">
-                  Add a hero image, abstract texture, illustration, or brand visual here.
-                </p>
-              </div>
-              <div className="min-h-[260px] rounded-[1.85rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] px-8 py-8 flex flex-col justify-between">
-                <span className="inline-flex w-fit rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[0.68rem] font-medium text-white/45">
-                  Starter article
-                </span>
-                <p className="max-w-[18ch] text-base leading-relaxed text-neutral-300">
-                  This layout is intentionally clean so your actual content and voice can carry the page.
-                </p>
-              </div>
+            <div
+              aria-label="Editorial visual"
+              className="relative min-h-[260px] overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_22%_28%,rgba(255,255,255,0.16),transparent_34%),radial-gradient(circle_at_76%_72%,rgba(255,255,255,0.08),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.015))]"
+            >
+              <div className="absolute inset-[18%_12%] rotate-[-5deg] rounded-[45%] border border-white/[0.08] bg-white/[0.025] blur-[1px]" />
+              <div className="absolute left-[18%] top-[24%] h-[52%] w-[42%] rounded-full bg-white/[0.035] blur-3xl" />
             </div>
           )}
         </div>
