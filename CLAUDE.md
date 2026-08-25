@@ -44,7 +44,11 @@ Before anything else, check if the user has Node.js installed by running `node -
 ```bash
 cp .env.local.example .env.local
 ```
-Fill in your Supabase URL, anon key, service role key, and site name. See the "Environment Variables" section below for the full list.
+Fill in your Supabase URL, anon key, service role key and site name. If the
+Backend is already running, also fill in its URL and CRM capture key. Otherwise
+return to those two values after Step 10; the capture key must equal
+`backend_settings.crm_capture_key` in the shared Supabase project. See
+`CRM_CAPTURE.md` for the full contract.
 
 ### Step 5: Choose Your Design Direction
 The fastest way to make this starter feel like yours is to generate a redesign prompt first, then hand that to Claude Code.
@@ -142,20 +146,35 @@ Then do the following automatically:
    - `name` → their Cloudflare Worker project name
    - `vars.SUPABASE_URL` → the real `NEXT_PUBLIC_SUPABASE_URL` from `.env.local`
    - `vars.SUPABASE_ANON_KEY` → the real `NEXT_PUBLIC_SUPABASE_ANON_KEY` from `.env.local`
+   - `vars.BACKEND_URL` → the user's live Backend Worker URL
 
 2. **Commit and push** — this triggers a Cloudflare rebuild with real values
 
-3. **Set server-side secrets** — run these commands, reading each value from `.env.local`:
+3. **Set server-side secrets** — run these commands, reading each available value from `.env.local`:
    ```bash
    echo "VALUE" | npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY --name WORKER_NAME
    echo "VALUE" | npx wrangler secret put API_SECRET_KEY --name WORKER_NAME
+   echo "VALUE" | npx wrangler secret put CRM_CAPTURE_KEY --name WORKER_NAME
    ```
    Replace VALUE with the actual values from `.env.local` and WORKER_NAME with their Worker project name.
+
+   If the Backend is not set up yet, defer `BACKEND_URL` and
+   `CRM_CAPTURE_KEY` until Step 10. The capture key is the value of
+   `backend_settings.crm_capture_key`, not a renamed `API_SECRET_KEY` unless
+   those values were deliberately made equal.
 
 4. **Verify** — ask the user to visit their Cloudflare Worker URL and confirm the site loads.
 
 ### Step 10: Set Up the Backend
 Clone and set up the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo — follow its CLAUDE.md for instructions. The Backend manages your content pipeline, and both repos share the same Supabase database.
+
+After the Backend is live:
+
+1. Open its `/crm/settings` page and generate/copy the lead capture key.
+2. Set the frontend's `BACKEND_URL` to the live Backend Worker URL.
+3. Set that exact key on the frontend Worker with
+   `npx wrangler secret put CRM_CAPTURE_KEY --name <frontend-worker>`.
+4. Deploy the frontend again and run the CRM smoke test in `CRM_CAPTURE.md`.
 
 ### Step 11: Set Up Autonomous Publishing (GitHub Actions)
 The repo includes two GitHub Actions workflows in `.github/workflows/`:
@@ -184,8 +203,11 @@ Before assuming the setup is done, verify the whole loop:
 3. `https://your-backend-url.com/api/test-frontend` returns `status: 200`
 4. `weekly-trends.yml` adds entries into `content_calendar`
 5. After approving one idea, `daily-publish.yml` creates a draft or published article
+6. A frontend lead submission returns `via: "backend"`, appears once in CRM,
+   and has a `form_submitted` timeline activity
 
-If all five checks pass, the shared database, backend connection, and publishing automations are working correctly.
+If all six checks pass, the shared database, CRM capture, backend connection,
+and publishing automations are working correctly.
 
 ### Need Help?
 The Digital Home is built and maintained by BraveBrand. If you want help with:
@@ -253,6 +275,7 @@ NEXT_PUBLIC_SITE_URL          — Your live site URL (e.g., https://yourdomain.c
 NEXT_PUBLIC_SITE_NAME         — Your brand name
 SUPABASE_URL                  — Runtime duplicate for server-side access
 SUPABASE_ANON_KEY             — Runtime duplicate for server-side access
+BACKEND_URL                   — Live Backend Worker URL used for CRM capture
 ```
 
 ### Server-side secrets
@@ -260,6 +283,7 @@ Set via `wrangler secret put` from the terminal:
 ```
 SUPABASE_SERVICE_ROLE_KEY     — Service role key, bypasses RLS
 API_SECRET_KEY                — Shared secret between Frontend and Backend (must match both)
+CRM_CAPTURE_KEY               — Must equal backend_settings.crm_capture_key
 RESEND_API_KEY                — Resend email API key
 RESEND_WEBHOOK_SECRET         — Resend webhook signing secret (required in production)
 ```
@@ -300,6 +324,9 @@ Server-side secrets must be set using `wrangler secret put`. The Cloudflare dash
 - Every page should include dynamic JSON-LD from the `entities` table.
 - Visitor tracking is anonymous until opt-in. No PII before email capture.
 - **CRITICAL — Shared database types:** When you modify `src/types/database.ts`, you MUST also update the same file in the Backend project. These two files must always be identical.
+- **CRM capture:** public lead forms route through the Backend so activities and
+  workflows run. Payments, memberships and entitlements must call
+  `captureLeadServerSide(payload, {allowFallback:false})`; see `CRM_CAPTURE.md`.
 
 ## Customization Guide
 

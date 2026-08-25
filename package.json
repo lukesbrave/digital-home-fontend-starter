@@ -12,6 +12,9 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "start": "next start",
+    "test": "npm run test:crm",
+    "test:crm": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types --test src/lib/crm/*.test.ts",
+    "test:crm:smoke": "node src/lib/crm/capture-smoke.mjs",
     "lint": "eslint",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },

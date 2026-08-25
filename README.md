@@ -2,6 +2,11 @@
 
 An open-source, agent-native website starter kit built for digital sovereignty. Fully owned infrastructure, no platform lock-in.
 
+> **API compatibility:** public `POST /api/leads` now returns
+> `{ok, lead_id, created, via}` (`201` for create, `200` for update, `503` for a
+> critical capture failure). Older custom forms that consumed the full lead row
+> must migrate to this response contract. See `CRM_CAPTURE.md`.
+
 This is the **Frontend starter** — a website starter with the full architecture already built. It handles SEO, AI traffic detection, personalization, email, analytics, and a blog powered by AI-generated content. Behind it sits the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) — the operating system that manages content, leads, email, analytics, and AI agents. Both share the same Supabase database.
 
 ```

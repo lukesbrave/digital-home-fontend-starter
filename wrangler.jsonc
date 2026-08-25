@@ -15,6 +15,8 @@
   // Replace these with your own Supabase credentials
   "vars": {
     "SUPABASE_URL": "https://your-project.supabase.co",
-    "SUPABASE_ANON_KEY": "your-anon-key"
+    "SUPABASE_ANON_KEY": "your-anon-key",
+    "BACKEND_URL": "https://your-backend-worker.example.workers.dev"
   }
+  // CRM_CAPTURE_KEY is a secret. Its value must equal backend_settings.crm_capture_key.
 }

@@ -11,6 +11,8 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { authenticateRequest, unauthorizedResponse } from "@/lib/api/auth";
 import { jsonResponse, errorResponse, parsePagination, paginatedResponse } from "@/lib/api/response";
 import { VISITOR_COOKIE_NAME } from "@/lib/personalization/visitor";
+import { captureLeadServerSide } from "@/lib/crm/capture";
+import { buildPublicCapturePayload } from "@/lib/crm/public-capture";
 import type { Enums } from "@/types/database";
 
 export async function GET(request: NextRequest) {
@@ -39,10 +41,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  const body = await request.json().catch(() => null);
 
-  if (!body.email) {
+  if (!body || typeof body.email !== "string") {
     return errorResponse("email is required");
+  }
+
+  // Honeypot: bots fill every field. Accept the request but persist nothing.
+  if (typeof body.website === "string" && body.website.trim() !== "") {
+    return jsonResponse({ ok: true });
   }
 
   // Basic email validation
@@ -52,61 +59,27 @@ export async function POST(request: NextRequest) {
 
   const visitorId = request.cookies.get(VISITOR_COOKIE_NAME)?.value || null;
 
-  const supabase = createAdminClient();
+  const result = await captureLeadServerSide(
+    buildPublicCapturePayload(body as Record<string, unknown>),
+    { allowFallback: body.critical !== true }
+  );
 
-  // Check if lead already exists
-  const { data: existing } = await supabase
-    .from("leads")
-    .select("id")
-    .eq("email", body.email.toLowerCase())
-    .single();
-
-  if (existing) {
-    // Update existing lead
-    const { data, error } = await supabase
-      .from("leads")
-      .update({
-        first_name: body.first_name || undefined,
-        last_name: body.last_name || undefined,
-        visitor_id: visitorId || undefined,
-        capture_page: body.capture_page || undefined,
-        tags: body.tags || undefined,
-      })
-      .eq("id", existing.id)
-      .select()
-      .single();
-
-    if (error) return errorResponse(error.message, 500);
-    return jsonResponse(data);
+  if (!result.ok || !result.leadId) {
+    return errorResponse(result.error || "Lead capture failed", body.critical === true ? 503 : 500);
   }
-
-  // Create new lead
-  const { data, error } = await supabase
-    .from("leads")
-    .insert({
-      email: body.email.toLowerCase(),
-      first_name: body.first_name || null,
-      last_name: body.last_name || null,
-      visitor_id: visitorId,
-      source: body.source || null,
-      capture_page: body.capture_page || null,
-      status: "new",
-      score: 0,
-      tags: body.tags || [],
-      interested_offers: body.interested_offers || [],
-    })
-    .select()
-    .single();
-
-  if (error) return errorResponse(error.message, 500);
 
   // Link visitor to lead
   if (visitorId) {
-    await supabase
+    const supabase = createAdminClient();
+    const { error: visitorError } = await supabase
       .from("visitors")
-      .update({ lead_id: data.id })
+      .update({ lead_id: result.leadId })
       .eq("anonymous_id", visitorId);
+    if (visitorError) console.warn("lead capture: visitor link failed", visitorError.message);
   }
 
-  return jsonResponse(data, 201);
+  return jsonResponse(
+    { ok: true, lead_id: result.leadId, created: result.created, via: result.via },
+    result.created ? 201 : 200
+  );
 }
