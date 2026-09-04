@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # Digital Home Starter
 
 This is an open-source, AI-native website and content system. If someone opens this project and asks for help, walk them through the First Time Setup below step by step. Ask them for each piece of information as you go (API keys, project URLs, brand details) — don't assume anything.

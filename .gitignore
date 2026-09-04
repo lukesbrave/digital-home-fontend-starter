@@ -46,3 +46,6 @@ supabase/.temp/
 
 # content corpus (your brand IP — not part of the open-source code)
 content-corpus/
+
+# Agent worktrees live inside the repo
+.worktrees/
