@@ -5,10 +5,15 @@ export interface BackendCaptureResult {
   error?: string;
 }
 
-type FetchImplementation = (
+export type FetchImplementation = (
   input: string | URL | Request,
   init?: RequestInit
 ) => Promise<Response>;
+
+/** Preserve the service binding's receiver; never retry a failed bound request over public HTTP. */
+export function backendFetch(binding?: { fetch: FetchImplementation }): FetchImplementation {
+  return binding ? binding.fetch.bind(binding) : fetch;
+}
 
 /** Attempts the authoritative CRM endpoint without invoking a fallback. */
 export async function captureViaBackend(

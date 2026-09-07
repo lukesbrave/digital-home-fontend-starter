@@ -4,6 +4,18 @@
 
 This is an open-source, AI-native website and content system. If someone opens this project and asks for help, walk them through the First Time Setup below step by step. Ask them for each piece of information as you go (API keys, project URLs, brand details) — don't assume anything.
 
+## Simon / BraveBrand guided setup
+
+When running `mission-build-home`, follow that mission for the member journey and
+completion; use this repository for technical commands and configuration. Simon
+handles both repositories in the existing DM. No new chat or Buzz Project is required.
+Deploy and verify the working foundation with the business facts already supplied.
+The deeper content corpus, Brand Playbook, articles and design are later, optional
+work with Simon or the specialist agents. Their absence does not make a verified
+core build incomplete. Do not start that work automatically or hold the handover
+until it is done. Congratulate the member, deliver both live links and explain the
+next choices after the login and lead loop are verified and shared context is saved.
+
 ## First Time Setup
 
 If you just cloned this repo, follow these steps in order. You need both this repo (Frontend) and the [Digital Home Backend](https://github.com/lukesbrave/digital-home-backend) repo.
@@ -76,11 +88,11 @@ If you skip Prompt Builder, ask the user for:
 - primary CTA
 - preferred visual vibe
 
-### Step 6: Set Up Your Content Corpus
+### Step 6: Set Up Your Content Corpus (when beginning content work)
 ```bash
 cp -r content-corpus-examples/ content-corpus/
 ```
-Edit each file in `content-corpus/` with your brand's voice, positioning, offers, testimonials, and keywords. **This is the most important step** — it's what makes the AI write like you instead of generic slop.
+Edit each file in `content-corpus/` with your brand's voice, positioning, offers, testimonials, and keywords. This gives later article writing your business context. During a Simon-guided build, the foundation can be handed over first; develop this with the member when they choose brand/content work.
 
 > **⚠️ Don't rush this step.** The content corpus is the difference between AI that writes like you and AI that writes like everyone else. A properly built corpus includes:
 >
@@ -95,7 +107,7 @@ Edit each file in `content-corpus/` with your brand's voice, positioning, offers
 >
 > The example files in `content-corpus-examples/` show the format. You can fill them in yourself, or use the structured brand intake process and content corpus skill available in the [BraveBrand community](https://www.skool.com/bravebrand) — which walks you through a guided interview and generates all of these files from your answers.
 >
-> **Do not skip to the next step until your content corpus is complete.** Everything the AI writes — articles, SEO metadata, CTAs — is only as good as what you put here.
+For a Simon-guided build, this is later brand/content work. Complete the working foundation and handover first, then offer help or the specialist agents.
 
 You also need three special entries in the `brand_context` table (add via Supabase dashboard → Table Editor → brand_context → Insert row):
 
@@ -127,7 +139,7 @@ npm install
 npm run dev
 ```
 
-### Step 8: Customize Your Pages
+### Step 8: Customize Your Pages (optional after the foundation is live)
 This starter is infrastructure plus a neutral baseline, not a finished website. Claude Code should treat the current pages as a starting point, then redesign them around the user's actual brand, offer, audience, and visual direction.
 
 Claude Code can help — say "help me redesign this starter using my Prompt Builder output."
@@ -356,3 +368,17 @@ If the user wants a faster starting point, direct them to the Prompt Builder fir
 - JSON-LD schema (from the `entities` table)
 - llms.txt (from entities, content, and offers)
 - Sitemap (from published content)
+
+## Frontend-to-backend Worker connection
+
+For the two Workers in the same Cloudflare account, configure the frontend's
+`BACKEND_WORKER` service binding to the actual backend Worker name. Keep
+`BACKEND_URL` as its verified URL and `CRM_CAPTURE_KEY` as the matching backend
+capture secret. The server-side capture path uses the binding so initial
+workers.dev sites do not hit Cloudflare error 1042. Local Next.js and deployments
+without a binding retain normal HTTP capture. A failed bound call is not retried
+over public HTTP; the existing capture error/fallback policy still applies.
+After the frontend exists, configure the backend's `FRONTEND_WORKER` binding to
+it and verify capture and the backend's frontend check in both directions.
+`npm run deploy` already builds; after an unchanged successful `npm run build`,
+use `npx opennextjs-cloudflare deploy` to avoid a duplicate compilation.

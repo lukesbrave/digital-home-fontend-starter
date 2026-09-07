@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/server";
-import { captureViaBackend } from "./capture-backend";
+import { backendFetch, captureViaBackend } from "./capture-backend";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import {
   buildFallbackActivities,
   mergeCaptureCustom,
@@ -43,9 +44,14 @@ export async function captureLeadServerSide(
   payload: CapturePayload,
   options: { allowFallback?: boolean } = {}
 ): Promise<CaptureResult> {
+  let binding: CloudflareEnv["BACKEND_WORKER"];
+  try { binding = getCloudflareContext().env.BACKEND_WORKER; } catch {
+    // Local Next.js or non-Cloudflare hosting has no Workers context.
+  }
   const backend = await captureViaBackend(payload, {
     backendUrl: process.env.BACKEND_URL,
     captureKey: process.env.CRM_CAPTURE_KEY,
+    fetchImpl: backendFetch(binding),
   });
   if (backend.ok) {
     return {

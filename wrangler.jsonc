@@ -8,6 +8,9 @@
     "binding": "ASSETS",
     "directory": ".open-next/assets"
   },
+  // Set service to the actual backend Worker in this account. The CRM capture
+  // path uses this binding on workers.dev and custom domains alike.
+  "services": [{ "binding": "BACKEND_WORKER", "service": "digital-home-backend" }],
   "observability": {
     "enabled": true
   },
